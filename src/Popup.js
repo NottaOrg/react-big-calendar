@@ -64,27 +64,29 @@ class Popup extends React.Component {
         <div className="rbc-overlay-header">
           {localizer.format(slotStart, 'dayHeaderFormat')}
         </div>
-        {events.map((event, idx) => (
-          <EventCell
-            key={idx}
-            type="popup"
-            event={event}
-            getters={getters}
-            onSelect={onSelect}
-            accessors={accessors}
-            components={components}
-            onDoubleClick={onDoubleClick}
-            onKeyPress={onKeyPress}
-            continuesPrior={dates.lt(accessors.end(event), slotStart, 'day')}
-            continuesAfter={dates.gte(accessors.start(event), slotEnd, 'day')}
-            slotStart={slotStart}
-            slotEnd={slotEnd}
-            selected={isSelected(event, selected)}
-            draggable={true}
-            onDragStart={() => this.props.handleDragStart(event)}
-            onDragEnd={() => this.props.show()}
-          />
-        ))}
+        <div className="rbc-overlay-body">
+          {events.map((event, idx) => (
+            <EventCell
+              key={idx}
+              type="popup"
+              event={event}
+              getters={getters}
+              onSelect={onSelect}
+              accessors={accessors}
+              components={components}
+              onDoubleClick={onDoubleClick}
+              onKeyPress={onKeyPress}
+              continuesPrior={dates.lt(accessors.end(event), slotStart, 'day')}
+              continuesAfter={dates.gte(accessors.start(event), slotEnd, 'day')}
+              slotStart={slotStart}
+              slotEnd={slotEnd}
+              selected={isSelected(event, selected)}
+              draggable={true}
+              onDragStart={() => this.props.handleDragStart(event)}
+              onDragEnd={() => this.props.show()}
+            />
+          ))}
+        </div>
       </div>
     )
   }
