@@ -11,11 +11,16 @@ import { isSelected } from './utils/selection'
 class Popup extends React.Component {
   componentDidMount() {
     let { popupOffset = 5, popperRef } = this.props,
-      { top, left, width, height } = getOffset(popperRef.current),
+      { top, left, width, height } = getOffset(
+        popperRef.current || document.getElementById('rbc-overlay')
+      ),
       viewBottom = window.innerHeight + getScrollTop(window),
       viewRight = window.innerWidth + getScrollLeft(window),
       bottom = top + height,
       right = left + width
+    const [dayBox] = document.getElementsByClassName('rbc-row-bg')
+    const { height: dayHeight } = getOffset(dayBox)
+    this.setState({ topOffset: (height + dayHeight) / 2 }) //eslint-disable-line
 
     if (bottom > viewBottom || right > viewRight) {
       let topOffset, leftOffset
@@ -59,6 +64,7 @@ class Popup extends React.Component {
       <div
         style={{ ...this.props.style, ...style }}
         className="rbc-overlay"
+        id="rbc-overlay"
         ref={popperRef}
       >
         <div className="rbc-overlay-header">
