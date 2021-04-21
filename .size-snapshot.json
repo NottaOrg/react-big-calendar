@@ -1,25 +1,25 @@
 {
   "./dist/react-big-calendar.js": {
-    "bundled": 493703,
-    "minified": 154873,
-    "gzipped": 47414
+    "bundled": 493982,
+    "minified": 154956,
+    "gzipped": 47441
   },
   "./dist/react-big-calendar.min.js": {
-    "bundled": 420983,
-    "minified": 131306,
-    "gzipped": 41462
+    "bundled": 421262,
+    "minified": 131389,
+    "gzipped": 41493
   },
   "dist/react-big-calendar.esm.js": {
-    "bundled": 183509,
-    "minified": 87504,
-    "gzipped": 21691,
+    "bundled": 183773,
+    "minified": 87590,
+    "gzipped": 21720,
     "treeshaked": {
       "rollup": {
-        "code": 62605,
+        "code": 62683,
         "import_statements": 1590
       },
       "webpack": {
-        "code": 67169
+        "code": 67249
       }
     }
   }

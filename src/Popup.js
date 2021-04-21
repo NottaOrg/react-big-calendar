@@ -10,7 +10,7 @@ import { isSelected } from './utils/selection'
 
 class Popup extends React.Component {
   componentDidMount() {
-    let { popupOffset = 5, popperRef } = this.props,
+    let { popupOffset = 5, popperRef, overlay } = this.props,
       { top, left, width, height } = getOffset(
         popperRef.current || document.getElementById('rbc-overlay')
       ),
@@ -20,7 +20,11 @@ class Popup extends React.Component {
       right = left + width
     const [dayBox] = document.getElementsByClassName('rbc-row-bg')
     const { height: dayHeight } = getOffset(dayBox)
+    const { top: targetTop } = getOffset(overlay.target)
     this.setState({ topOffset: (height + dayHeight) / 2 }) //eslint-disable-line
+    if (viewBottom - targetTop < height / 2) {
+      this.setState({ topOffset: height })
+    }
 
     if (bottom > viewBottom || right > viewRight) {
       let topOffset, leftOffset
@@ -100,6 +104,7 @@ class Popup extends React.Component {
 
 Popup.propTypes = {
   position: PropTypes.object,
+  overlay: PropTypes.object,
   popupOffset: PropTypes.oneOfType([
     PropTypes.number,
     PropTypes.shape({
