@@ -10,12 +10,21 @@ import { isSelected } from './utils/selection'
 
 class Popup extends React.Component {
   componentDidMount() {
-    let { popupOffset = 5, popperRef } = this.props,
-      { top, left, width, height } = getOffset(popperRef.current),
+    let { popupOffset = 5, popperRef, overlay } = this.props,
+      { top, left, width, height } = getOffset(
+        popperRef.current || document.getElementById('rbc-overlay')
+      ),
       viewBottom = window.innerHeight + getScrollTop(window),
       viewRight = window.innerWidth + getScrollLeft(window),
       bottom = top + height,
       right = left + width
+    const [dayBox] = document.getElementsByClassName('rbc-row-bg')
+    const { height: dayHeight } = getOffset(dayBox)
+    const { top: targetTop } = getOffset(overlay.target)
+    this.setState({ topOffset: (height + dayHeight) / 2 }) //eslint-disable-line
+    if (viewBottom - targetTop < height / 2) {
+      this.setState({ topOffset: height })
+    }
 
     if (bottom > viewBottom || right > viewRight) {
       let topOffset, leftOffset
@@ -59,32 +68,35 @@ class Popup extends React.Component {
       <div
         style={{ ...this.props.style, ...style }}
         className="rbc-overlay"
+        id="rbc-overlay"
         ref={popperRef}
       >
         <div className="rbc-overlay-header">
           {localizer.format(slotStart, 'dayHeaderFormat')}
         </div>
-        {events.map((event, idx) => (
-          <EventCell
-            key={idx}
-            type="popup"
-            event={event}
-            getters={getters}
-            onSelect={onSelect}
-            accessors={accessors}
-            components={components}
-            onDoubleClick={onDoubleClick}
-            onKeyPress={onKeyPress}
-            continuesPrior={dates.lt(accessors.end(event), slotStart, 'day')}
-            continuesAfter={dates.gte(accessors.start(event), slotEnd, 'day')}
-            slotStart={slotStart}
-            slotEnd={slotEnd}
-            selected={isSelected(event, selected)}
-            draggable={true}
-            onDragStart={() => this.props.handleDragStart(event)}
-            onDragEnd={() => this.props.show()}
-          />
-        ))}
+        <div className="rbc-overlay-body">
+          {events.map((event, idx) => (
+            <EventCell
+              key={idx}
+              type="popup"
+              event={event}
+              getters={getters}
+              onSelect={onSelect}
+              accessors={accessors}
+              components={components}
+              onDoubleClick={onDoubleClick}
+              onKeyPress={onKeyPress}
+              continuesPrior={dates.lt(accessors.end(event), slotStart, 'day')}
+              continuesAfter={dates.gte(accessors.start(event), slotEnd, 'day')}
+              slotStart={slotStart}
+              slotEnd={slotEnd}
+              selected={isSelected(event, selected)}
+              draggable={true}
+              onDragStart={() => this.props.handleDragStart(event)}
+              onDragEnd={() => this.props.show()}
+            />
+          ))}
+        </div>
       </div>
     )
   }
@@ -92,6 +104,7 @@ class Popup extends React.Component {
 
 Popup.propTypes = {
   position: PropTypes.object,
+  overlay: PropTypes.object,
   popupOffset: PropTypes.oneOfType([
     PropTypes.number,
     PropTypes.shape({
